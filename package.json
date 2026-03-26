@@ -1,0 +1,17 @@
+{
+  "name": "jenkins",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.js",
+  "scripts": {
+    "build": "node scripts/build.js",
+    "test": "node --test test/"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "engines": {
+    "node": ">=18"
+  }
+}
