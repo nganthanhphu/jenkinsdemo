@@ -7,25 +7,25 @@ pipeline {
 
     stages {
         stage('Install') {
-            dir('backend') {
-                steps {
+            steps {
+                dir('backend'){
                     sh 'npm install'
                 }
             }
         }
 
         stage('Build') {
-            dir('backend') {
-                steps {
+            steps {
+                dir('backend'){
                     sh 'npm run build'
                 }
             }
         }
 
         stage('Test') {
-            dir('backend') {
-                steps {
-                sh 'npm test'
+            steps {
+                dir('backend'){
+                    sh 'npm test'
                 }
             }
         }
