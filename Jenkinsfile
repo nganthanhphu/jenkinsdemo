@@ -20,6 +20,7 @@ pipeline {
 
         stage('Test') {
             steps {
+                sh 'cd backend'
                 sh 'npm test'
             }
         }

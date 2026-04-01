@@ -1,0 +1,26 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKER_IMAGE = 'nodejs-backend'
+        DOCKER_TAG = 'latest'
+    }
+
+    stages {
+        stage('Build') {
+            steps {
+                docker.build("${DOCKER_IMAGE}:${DOCKER_TAG}", '-f backend/Dockerfile .')
+            }
+        }
+
+        stage('Push image') {
+            steps {
+                script {
+                    docker.withRegistry('https://registry.hub.docker.com', 'dockerhub-credentials') {
+                        docker.image("${DOCKER_IMAGE}:${DOCKER_TAG}").push()
+                    }
+                }
+            }
+        }
+    }
+}
