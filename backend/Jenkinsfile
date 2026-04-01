@@ -1,9 +1,5 @@
 pipeline {
-    agent {
-        docker {
-            image 'node:18-alpine'
-        }
-    }
+    agent any
 
     environment {
         DOCKER_IMAGE = 'nodejs-backend'
@@ -14,7 +10,7 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    docker.build("${DOCKER_IMAGE}:${DOCKER_TAG}", '-f backend/Dockerfile .')
+                    docker.build("${DOCKER_IMAGE}:${DOCKER_TAG}", '-f backend/Dockerfile backend')
                 }
             }
         }
@@ -24,6 +20,7 @@ pipeline {
                 script {
                     docker.withRegistry('https://registry.hub.docker.com', 'dockerhub-credentials') {
                         docker.image("${DOCKER_IMAGE}:${DOCKER_TAG}").push()
+                        docker.image("${DOCKER_IMAGE}:${DOCKER_TAG}").push('latest')
                     }
                 }
             }
