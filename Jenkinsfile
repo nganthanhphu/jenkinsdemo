@@ -6,6 +6,12 @@ pipeline {
     }
 
     stages {
+        stage('Change workdir') {
+            steps {
+                sh 'cd backend'
+            }
+        }
+
         stage('Install') {
             steps {
                 sh 'npm install'
@@ -20,7 +26,6 @@ pipeline {
 
         stage('Test') {
             steps {
-                sh 'cd backend'
                 sh 'npm test'
             }
         }
