@@ -1,49 +1,40 @@
 pipeline {
-    agent {
-        docker {
-            image 'node:20-alpine'
-        }
+    agent any
+
+    options {
+        timeout(time: 30, unit: 'MINUTES')
+        timestamps()
     }
 
     stages {
-        stage('Install') {
+        stage('Checkout'){
             steps {
-                dir('backend'){
-                    sh 'npm install'
-                }
+                checkout scm
             }
         }
 
-        stage('Build') {
-            steps {
-                dir('backend'){
-                    sh 'npm run build'
+        stage('Install and lint and build'){
+            agent {
+                docker {
+                    image 'node:22-alpine'
+                    reuseNode true
                 }
             }
-        }
-
-        stage('Test') {
             steps {
-                dir('backend'){
-                    sh 'npm test'
-                }
-            }
-        }
-
-        stage('Deploy') {
-            steps {
-                sh 'echo "Deploying..."'
+                sh 'node -v && npm -v'
+                sh 'npm ci'
+                sh 'npm run lint'
+                sh 'npm run build'
             }
         }
     }
 
     post {
         success {
-            echo 'Pipeline completed successfully!'
+            archiveArtifacts artifacts: 'dist/**/*', fingerprint: true, allowEmptyArchive: false
         }
-
         failure {
-            echo 'Pipeline failed. Please check the logs.'
+            echo 'Pipeline failed!'
         }
     }
 }
